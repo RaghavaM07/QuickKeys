@@ -17,6 +17,54 @@
 }
 
 
+.keyboard-base {
+  @apply max-w-[1085px] m-auto grid grid-cols-[repeat(30,30px)] grid-rows-[repeat(5,60px)] gap-[5px] p-5 rounded-[10px] left-2/4 top-2/4;
+}
+.key {
+  @apply bg-[rgb(243,243,243)] col-[span_2] text-xl text-center pt-[17px] rounded-[5px] border-2 border-solid border-[black] hover:border hover:border-solid hover:border-[#eeeeee];
+}
+.delete {
+  @apply col-[span_4];
+}
+.tab {
+  @apply col-[span_3];
+}
+.backslash {
+  @apply col-[span_3];
+}
+.capslock {
+  @apply col-[span_4];
+}
+.return {
+  @apply col-[span_4];
+}
+.leftshift {
+  @apply col-[span_5];
+}
+.rightshift {
+  @apply col-[span_5];
+}
+.leftctrl {
+  @apply col-[span_3];
+}
+.command {
+  @apply col-[span_3] text-sm;
+}
+.space {
+  @apply col-[span_13];
+}
 
+.correct{
+  @apply text-green-500 float-left;
+}
+.wrong{
+  @apply text-red-500 float-left;
+}
+.normal{
+  @apply text-white float-left;
+}
 
+.blink{
+  @apply bg-green-500 border border-solid border-[#eeeeee];
 
+}

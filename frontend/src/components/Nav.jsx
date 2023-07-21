@@ -10,11 +10,7 @@ export const Nav = () => {
   const { username, setUsername } = useContext(UserContext);
   const navigate = useNavigate();
 
-  // useEffect(() => {
-  //   Axios.get("").then((response) => {
-  //     setUsername(response.data);
-  //   });
-  // });
+  
 
   const leaderBoard = () =>{
     navigate('/leaderboard');
@@ -27,7 +23,7 @@ export const Nav = () => {
             <div className="mx-5 bg-opacity-75 text-6xl font-bold leading-6 text-white">QuickKeys</div>
         </div>
         <div className="hidden lg:flex lg:flex-1 lg:justify-end">
-          <div className="mx-10 text-3xl font-bold leading-6 text-gray-900">Username</div>
+          <div className="mx-10 text-3xl font-bold leading-6 text-gray-900">{username}</div>
           <div onClick={ leaderBoard } className="cursor-pointer hover:opacity-40 text-3xl"><MdLeaderboard /></div>
         </div>
       </nav>

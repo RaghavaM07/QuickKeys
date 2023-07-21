@@ -1,11 +1,29 @@
+import React, { useEffect,useContext } from 'react'
 import { Routes, Route } from 'react-router-dom'
+import { UserContext } from './context/userProvider';
 import { Home } from './pages/Home';
 import { Compete } from './pages/compete';
 import { Practice } from './pages/practice';
 import { Board } from './pages/board';
 import { Nav } from './components/Nav.jsx';
+import Axios from 'axios';
 
 function App() {
+  
+  const { username, setUsername } = useContext(UserContext);
+
+  useEffect(() => {
+    if(localStorage.getItem('dataKey')){
+      setUsername(localStorage.getItem('dataKey'))
+    }
+    else{
+      Axios.get("http://localhost:5001/api/newUsername").then((response) => {
+        localStorage.setItem('dataKey', response.data.username);
+        setUsername(response.data.username);
+      });
+    }
+  },[]);
+
   return (
     <>
         <div className="App">

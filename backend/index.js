@@ -4,11 +4,13 @@ const app = express()
 const { v4: uuidv4 } = require('uuid')
 const mongoose = require('mongoose')
 const { generateUsername } = require("unique-username-generator");
+const cors = require('cors')
 
 const connectDB = require('./connectDB')
 const Result = require('./models/result.model')
 const Highscore = require('./models/highscores.model')
 
+app.use(cors())
 app.use(express.json())
 
 app.get('/api/newUsername', (req, res) => {

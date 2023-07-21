@@ -1,7 +1,6 @@
 import React,{ useContext, useState } from 'react'
 import {useNavigate} from 'react-router-dom';
 import { UserContext } from '../context/userProvider';
-import Axios from "axios";
 
 export const Home = () => {
 
@@ -17,15 +16,12 @@ export const Home = () => {
   }
 
   const CreateRoom = () =>{
-    Axios.get("").then((response) =>{
-      const Room = {
-        Roomid : response.data,
-        creater : true
-      };
-      setRoomDetails(Room);
-    });
+    const Room = {
+      Roomid : null,
+      creater : true
+    };
+    setRoomDetails(Room);
     navigate('/compete');
-    console.log(RoomDetails.Roomid);
   }
 
   const JoinRoom = () =>{

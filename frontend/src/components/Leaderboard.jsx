@@ -1,16 +1,10 @@
-import {useState, useEffect} from 'react'
+import React from 'react'
 import { CgProfile } from 'react-icons/cg';
-import axios from 'axios';
+import { data } from '../pages/board';
 
 
-export const Leaderboard = () => {
-    const [data,setData] = useState([]);
+export const Leaderboard = ({data}) => {
     
-    useEffect(() => {
-        axios.get("http://localhost:5001/api/leaderboard").then((response) => {
-          setData(response.data);
-        });
-      });
     return (
         <div className="bg-white bg-opacity-50 p-10 px-40">
             <ul role="list" className="px-5 bg-white divide-y divide-gray-100">

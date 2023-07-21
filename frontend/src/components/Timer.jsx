@@ -1,14 +1,19 @@
 import React,{ useState, useEffect, useRef} from 'react'
 import { Game } from '../models/Game';
 
-export const Timer = ({Time,setSpeed,index,inCorrects,setGameEnded,updateData}) => {
+export const Timer = ({Time,setSpeed,index,inCorrects,setGameEnded,endGame,setCurrentTime}) => {
     const Ref = useRef(null);
     const [timer, setTimer] = useState(null);
 
     useEffect(()=>{
         if(timer){
             const data = Game.getSpeed(index,inCorrects,Time-(timer.total/1000))
+            setCurrentTime(Time-(timer.total/1000))
             setSpeed(data);
+        }
+        if(timer?.time==="00:00")
+        {
+            endGame(Time-(timer.total/1000))
         }
     },[timer])
 

@@ -1,5 +1,4 @@
 import React, { useEffect, useState, useContext } from 'react'
-import Axios from "axios";
 import {useNavigate} from 'react-router-dom';
 import { UserContext } from '../context/userProvider';
 import { MdLeaderboard } from 'react-icons/md';

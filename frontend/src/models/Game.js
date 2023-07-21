@@ -16,7 +16,7 @@ export class Game {
 
 export const Difficulty = Object.freeze({
         'EASY' : {
-            duration : 10
+            duration : 5
         },
         'MEDIUM' : {
             duration : 180

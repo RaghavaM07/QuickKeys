@@ -6,7 +6,6 @@ import { data } from '../pages/board';
 export const Leaderboard = ({data}) => {
     
     return (
-        <div className="bg-white bg-opacity-50 p-10 px-40">
             <ul role="list" className="px-5 bg-white divide-y divide-gray-100">
                 <li className="flex justify-between gap-x-6 py-5">
                     <div className="flex gap-x-4">
@@ -37,7 +36,5 @@ export const Leaderboard = ({data}) => {
                     </li>
                 ))}
             </ul>
-
-        </div>
     )
 }

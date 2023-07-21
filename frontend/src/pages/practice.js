@@ -1,43 +1,43 @@
 import React, { useState, useEffect } from 'react'
 import {Typearea} from '../components/Typearea'
 import {Game, Difficulty} from '../models/Game'
+import { Result } from '../components/Result'
 import axios from 'axios'
 
 export const Practice = () => {
   const [difficulty,setDifficulty]=useState('EASY');
   const [gameActive,setGameActive]=useState(false);
   const [userDetails,setUserDetails] = useState(null)
-  const textToType = "Lorem ipsum dolor sit amet consectetur adipisicing elit. Aperiam ullam nemo nihil ipsam. Explicabo nam impedit, consectetur debitis deleniti consequuntur odio, repellendus provident laboriosam ut vero in odit suscipit illo."
-  
-  useEffect( ()=>{
-    // try{
-    //   await axios.post(`${process.env.DOMAIN}/api/getText`,{
-    //     difficulty
-    //   }).then((response)=>{
-    //     const userPlaying = new Game(response.textToType,Difficulty[difficulty].duration,"SOLO",0)
-    //     setUserDetails(userPlaying);
-    //   })
-    // }
-    // catch(error){
-      //   console.log(error);
-      // }
-          const userPlaying = new Game(textToType,Difficulty[difficulty].duration,"SOLO")
-          setUserDetails(userPlaying);
-  },[difficulty])
+  const [data, setData] = useState(null);
+  const [gameEnded, setGameEnded] = useState(false);
 
-  console.log(userDetails)
+
+  useEffect( ()=>{
+    try{
+       axios.post(`http://localhost:5001/api/getText`,{
+        difficulty
+      }).then((response)=>{
+        const userPlaying = new Game(response.data.paragraph,Difficulty[difficulty].duration,"SOLO")
+          setUserDetails(userPlaying);
+      })
+    }
+    catch(error){
+        console.log(error);
+      }
+  },[difficulty])
 
   const startGame = () => {
     setUserDetails({ ...userDetails, duration:Difficulty[difficulty].duration})
     setGameActive(true);
+    setGameEnded(false)
   }
 
   return (
     <>
+          <div className="mx-auto grid max-w-2xl  items-center gap-x-8 gap-y-16 px-4 py-5 sm:px-6 sm:py-7 lg:max-w-7xl  lg:px-10 bg-white bg-opacity-80">
         { userDetails && !gameActive  && (
-          <div className=" mx-auto grid max-w-2xl  items-center gap-x-8 gap-y-16 px-4 py-10 sm:px-6 sm:py-10 lg:max-w-7xl  lg:px-10">
         
-          <div className='p-2 flex justify-around items-center border-2 rounded-t-lg'>
+          <div className='p-5 flex justify-around items-center border-2 rounded-t-lg bg-white'>
           <select
             value={difficulty}
             onChange={(event)=> setDifficulty(event.target.value)}
@@ -57,14 +57,19 @@ export const Practice = () => {
             Start Game
           </button>
         </div>
-        </div>
         )}
 
         { userDetails && gameActive && (
           <>
-          <Typearea userDetails={userDetails}/>
+          <Typearea userDetails={userDetails} setGameActive={setGameActive} setGameEnded={setGameEnded} setData={setData}/>
           </>
         )}
+
+        
+      {data && gameEnded && (
+        <Result data={data} />
+        )}
+        </div>
     </>
   )
 }

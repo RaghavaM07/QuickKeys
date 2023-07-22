@@ -1,20 +1,39 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useContext } from 'react'
+import { UserContext } from '../context/userProvider';
 import { Typearea } from '../components/Typearea'
 import { Game, Difficulty } from '../models/Game'
 import { Result } from '../components/Result'
 import { Leaderboard } from '../components/Leaderboard'
 import axios from 'axios'
+import io from "socket.io-client";
+import CountdownTimer from '../components/Countdown';
 
+// const socket = io.connect("http://localhost:3001");
 
 
 
 export const Compete = () => {
+  const { username, RoomDetails, setRoomDetails } = useContext(UserContext);
+
   const [difficulty, setDifficulty] = useState('EASY');
   const [gameActive, setGameActive] = useState(false);
   const [userDetails, setUserDetails] = useState(null)
   const [data, setData] = useState(null);
   const [ldata, setLData] = useState(null);
   const [gameEnded, setGameEnded] = useState(false);
+  const [waiting, setWaiting] = useState(false);
+  const [waitTimer, setWaitTimer] = useState(null);
+  const [st, setSt] = useState(null);
+
+
+  // useEffect(() => {
+
+  //   socket.on("receive_message", (data) => {
+  //     setMessageReceived(data.message);
+  //   });
+  // }, [socket]);
+
+
 
   useEffect(() => {
     axios.get("http://localhost:5001/api/leaderboard").then((response) => {
@@ -23,31 +42,56 @@ export const Compete = () => {
     });
   }, []);
 
-  useEffect(() => {
+  const startTimer = async () => {
     try {
-      axios.post(`http://localhost:5001/api/getText`, {
+      await axios.post(`http://localhost:5001/api/newRoom`, {
+        username,
         difficulty
       }).then((response) => {
-        const userPlaying = new Game(response.data.paragraph, Difficulty[difficulty].duration, "SOLO")
+        setRoomDetails({ ...RoomDetails, Roomid: response.data.newRoom.roomId });
+        const userPlaying = new Game(response.data.newRoom.para, Difficulty[difficulty].duration, "MP")
         setUserDetails(userPlaying);
+        setGameActive(true);
+
+        // setWaitTimer((new Date(response.data.newRoom.startBy-Date.now()))/1000)
+        // setSt(new Date(response.data.newRoom.startBy))
+        setSt(new Date(Date.now()+5000))
+        setWaiting(true);
       })
+
+      
+
     }
     catch (error) {
       console.log(error);
     }
-  }, [difficulty])
 
-  const startGame = () => {
-    setUserDetails({ ...userDetails, duration: Difficulty[difficulty].duration })
-    setGameActive(true);
-    setGameEnded(false)
+
+
   }
+
+  // useEffect(()=>{
+  //   let intervalId = setInterval(() => {
+  //     if (waitTimer) {
+  //       setWaitTimer(waitTimer - 1);
+  //     }
+  //     else {
+  //       setWaiting(false)
+  //       clearInterval(intervalId);
+  //     }
+  //     console.log("hello")
+  //   }, 1000);
+  // },[waitTimer])
+
+  // const startGame = () => {
+  // setGameEnded(false)
+  // }
 
 
   return (
     <>
       <div className="mx-auto grid  items-center gap-x-8 gap-y-16 px-4 py-5 sm:px-6 sm:py-7 lg:px-10 bg-white bg-opacity-80">
-        {userDetails && !gameActive && (
+        {!gameActive && (
 
           <div className='p-5 flex justify-around items-center border-2 rounded-t-lg bg-white'>
             <select
@@ -63,7 +107,7 @@ export const Compete = () => {
             </select>
             <button
               type="submit"
-              onClick={startGame}
+              onClick={startTimer}
               className="block  rounded-md bg-green-600 px-3.5 py-2.5 text-center text-sm font-semibold text-white shadow-sm hover:bg-green-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
             >
               Start Game
@@ -75,10 +119,17 @@ export const Compete = () => {
           <>
             <div className="grid grid-cols-5 p-0">
               <div className='col-span-4 p-0'>
-                <Typearea userDetails={userDetails} setGameActive={setGameActive} setGameEnded={setGameEnded} setData={setData} />
+                {waiting ? (
+                  
+                  <CountdownTimer deadline={st} setFlag={setWaiting}/>
+                ) : (
+                  <Typearea userDetails={userDetails} setGameActive={setGameActive} setGameEnded={setGameEnded} setData={setData} />
+
+                )
+                }
               </div>
               <div className='p-0'>
-
+                {/* Hello DB */}
                 <Leaderboard data={ldata} />
               </div>
 
@@ -87,8 +138,12 @@ export const Compete = () => {
         )}
 
 
+
         {data && gameEnded && (
+          <>
           <Result data={data} />
+          <Leaderboard data={ldata} />
+          </>
         )}
       </div>
     </>

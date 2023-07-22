@@ -1,6 +1,19 @@
-import React from 'react';
+import React, { useEffect } from 'react';
+import axios from 'axios';
 
 export const Result = ({data}) => {
+    useEffect( ()=>{
+        try{
+           axios.post(`http://localhost:5001/api/result`,
+            data
+          ).then((response)=>{
+            console.log(response.ok)
+          })
+        }
+        catch(error){
+            console.log(error);
+          }
+      },[])
     
     return (
             <div  className="border-black border-2 rounded-md px-10 bg-white divide-y divide-gray-100">

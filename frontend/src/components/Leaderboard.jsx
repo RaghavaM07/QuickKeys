@@ -6,7 +6,7 @@ import { data } from '../pages/board';
 export const Leaderboard = ({data}) => {
     
     return (
-            <ul role="list" className="border-2 px-2 bg-white divide-y divide-gray-100">
+            <ul role="list" className="border-2 px-5 bg-white divide-y divide-gray-100">
                 <li className="flex justify-between gap-x-6 py-5">
                     <div className="flex gap-x-4">
                         <div className="m-auto h-12 w-12 flex-none rounded-full bg-gray-50 text-5xl"><CgProfile /></div>
@@ -28,9 +28,9 @@ export const Leaderboard = ({data}) => {
                             <p className="my-1 text-xl font-semibold leading-8 text-gray-700">{person.username}</p>
                         </div>
                         <div className="hidden sm:flex sm:flex-col sm:items-end">
-                        <p className="text-xl leading-6 text-gray-900">Speed : {person.resultId.speed}</p>
+                        <p className="text-xl leading-6 text-gray-900">Speed : {person.resultId.speed?.toFixed(2)}</p>
                         <div className="mt-1 flex items-center gap-x-1.5">
-                            <p className="text-xs leading-5 text-gray-500">Accuracy : {person.resultId.accuracy * 100}%</p>
+                            <p className="text-xs leading-5 text-gray-500">Accuracy : {person.resultId.accuracy?.toFixed(2) * 100}%</p>
                         </div>
                     </div>
                     </li>

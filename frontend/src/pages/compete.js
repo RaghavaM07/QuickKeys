@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { Typearea } from '../components/Typearea'
 import { Game, Difficulty } from '../models/Game'
 import { Result } from '../components/Result'
-import { Leaderboard } from '../components/Leaderboard'
+import { CompeteLeader } from '../components/CompeteLeader'
 import axios from 'axios'
 
 
@@ -79,7 +79,7 @@ export const Compete = () => {
               </div>
               <div className='p-0'>
 
-                <Leaderboard data={ldata} />
+                <CompeteLeader data={ldata} />
               </div>
 
             </div>

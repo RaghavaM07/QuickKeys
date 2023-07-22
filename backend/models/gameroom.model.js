@@ -11,7 +11,7 @@ const gameroomSchema = mongoose.Schema({
 	},
 	startBy: {
 		type: Date,
-		default: () => Date.now() + 60
+		default: () => Date.now() + 60*1000
 	},
 	endBy: {
 		type: Date,

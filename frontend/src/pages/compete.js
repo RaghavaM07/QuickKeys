@@ -1,14 +1,14 @@
-import React, { useState, useEffect, useContext } from 'react'
+import React, { useState, useEffect, useContext,useRef } from 'react'
 import { UserContext } from '../context/userProvider';
 import { Typearea } from '../components/Typearea'
 import { Game, Difficulty } from '../models/Game'
 import { Result } from '../components/Result'
 import { Leaderboard } from '../components/Leaderboard'
 import axios from 'axios'
-import io from "socket.io-client";
+import {io }from "socket.io-client";
 import CountdownTimer from '../components/Countdown';
 
-// const socket = io.connect("http://localhost:3001");
+const socket = io('http://localhost:5001');
 
 
 
@@ -22,16 +22,31 @@ export const Compete = () => {
   const [ldata, setLData] = useState(null);
   const [gameEnded, setGameEnded] = useState(false);
   const [waiting, setWaiting] = useState(false);
-  const [waitTimer, setWaitTimer] = useState(null);
-  const [st, setSt] = useState(null);
+  const [st, setSt] = useState(null)
+  console.log(socket)
 
+  useEffect(() => {
+    
+    socket.emit("updateScore", {
+      roomId:RoomDetails.Roomid , 
+      newScore:data, 
+      username
+    });
+    
+  }, [socket,data]);
 
-  // useEffect(() => {
+  useEffect(() => {
 
-  //   socket.on("receive_message", (data) => {
-  //     setMessageReceived(data.message);
-  //   });
-  // }, [socket]);
+    if(RoomDetails.Roomid){
+      socket.emit("join", {
+        roomId:RoomDetails.Roomid ,
+        username
+      });
+    }
+    socket.on("someones_score_update", (data) => {
+      console.log(data)
+    });
+  }, [socket]);
 
 
 
@@ -50,17 +65,17 @@ export const Compete = () => {
       }).then((response) => {
         setRoomDetails({ ...RoomDetails, Roomid: response.data.newRoom.roomId });
         const userPlaying = new Game(response.data.newRoom.para, Difficulty[difficulty].duration, "MP")
+        socket.emit("join", {
+          roomId:response.data.newRoom.roomId,
+          username
+        });
         setUserDetails(userPlaying);
         setGameActive(true);
-
         // setWaitTimer((new Date(response.data.newRoom.startBy-Date.now()))/1000)
-        // setSt(new Date(response.data.newRoom.startBy))
-        setSt(new Date(Date.now()+5000))
+        setSt(new Date(response.data.newRoom.startBy))
+        // setSt(new Date(Date.now()+5000))
         setWaiting(true);
       })
-
-      
-
     }
     catch (error) {
       console.log(error);
@@ -70,22 +85,6 @@ export const Compete = () => {
 
   }
 
-  // useEffect(()=>{
-  //   let intervalId = setInterval(() => {
-  //     if (waitTimer) {
-  //       setWaitTimer(waitTimer - 1);
-  //     }
-  //     else {
-  //       setWaiting(false)
-  //       clearInterval(intervalId);
-  //     }
-  //     console.log("hello")
-  //   }, 1000);
-  // },[waitTimer])
-
-  // const startGame = () => {
-  // setGameEnded(false)
-  // }
 
 
   return (

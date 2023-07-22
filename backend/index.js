@@ -27,9 +27,9 @@ app.post('/api/newRoom', async (req, res) => {
 	const { username, difficulty } = req.body
 
 	const runTime = {
-		'EASY': 90,
-		'MEDIUM': 180,
-		'HARD': 240
+		'EASY': 90*1000,
+		'MEDIUM': 180*1000,
+		'HARD': 240*1000
 	}
 
 	const roomId = uuidv4().toString()
@@ -64,9 +64,8 @@ app.post('/api/result', async (req, res) => {
 
 	if (currHigh === null) {
 		await Highscore.create({ username, resultId: result._id })
-	} else if (currHigh.speed <= result.speed) {
-		currHigh.resultId = result._id
-		await currHigh.save()
+	} else if (currHigh.resultId.speed <= result.speed) {
+		await Highscore.findOneAndUpdate({username}, {resultId: result._id})
 	}
 
 	res.json(result)
@@ -87,8 +86,7 @@ connectDB()
 const httpServer = http.createServer(app)
 const io = new Server(httpServer, {
 	cors: {
-		origin: 'http://localhost/3000',
-		methods: ['GET', 'POST']
+		origin: '*'
 	}
 })
 
@@ -96,7 +94,7 @@ httpServer.listen(PORT, () => {
 	console.log(`Running on http://localhost:${PORT}`)
 })
 
-io.on('connection', socket => {
+io.on('connection', (socket) => {
 	console.log(`Socket ID ${socket.id} connected`)
 
 	socket.on('join', async (data) => {
@@ -118,6 +116,6 @@ io.on('connection', socket => {
 
 	socket.on('updateScore', data => {
 		const { roomId, newScore, username } = data
-		socket.to(roomId).emit('someones_score_update', { newScore, username })
+		socket.to(roomId).emit('someones_score_update', { resultId: newScore, username })
 	})
 })

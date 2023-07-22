@@ -101,6 +101,15 @@ export const Typearea = ({ userDetails, setGameActive,setGameEnded, setData }) =
   }
 
   useEffect(() => {
+    setData({
+      username,
+      time:currentTime,
+      speed,
+      accuracy
+    })
+  }, [currentTime])
+
+  useEffect(() => {
     if(index === userDetails.textToType.length){
       endGame(currentTime)
     }
@@ -109,6 +118,8 @@ export const Typearea = ({ userDetails, setGameActive,setGameEnded, setData }) =
       setAccuracy(data);
     }
   }, [index, inCorrects])
+
+
 
   const handlePress = (event, isCorrect) => {
     if (isCorrect) {
@@ -120,6 +131,7 @@ export const Typearea = ({ userDetails, setGameActive,setGameEnded, setData }) =
     }
     setIndex(index + 1)
   }
+
   const handleUp = (event, isCorrect) => {
     const childElements = keyboardRef.current.querySelectorAll('.key');
     for (const childElement of childElements) {
@@ -235,15 +247,15 @@ export const Typearea = ({ userDetails, setGameActive,setGameEnded, setData }) =
               <div className="key">,</div>
               <div className="key">.</div>
               <div className="key">/</div>
-              <div className="key rightshift">Shift</div>
-              <div className="key leftctrl">Control</div>
-              <div className="key">Alt</div>
-              <div className="key command">Command</div>
-              <div className="key space">Space</div>
-              <div className="key command">command</div>
-              <div className="key">Alt</div>
-              <div className="key">Control</div>
-              <div className="key">Fn</div>
+              <div className="key rightshift">shift</div>
+              <div className="key leftctrl">ctrl</div>
+              <div className="key">alt</div>
+              <div className="key command">cmd</div>
+              <div className="key space">space</div>
+              <div className="key command">cmd</div>
+              <div className="key">alt</div>
+              <div className="key">ctrl</div>
+              <div className="key">fn</div>
             </div>
           </div>
         </div>

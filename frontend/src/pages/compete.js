@@ -3,7 +3,7 @@ import { UserContext } from '../context/userProvider';
 import { Typearea } from '../components/Typearea'
 import { Game, Difficulty } from '../models/Game'
 import { Result } from '../components/Result'
-import { Leaderboard } from '../components/Leaderboard'
+import { CompeteLeader } from '../components/CompeteLeader'
 import axios from 'axios'
 import {io }from "socket.io-client";
 import CountdownTimer from '../components/Countdown';
@@ -128,8 +128,8 @@ export const Compete = () => {
                 }
               </div>
               <div className='p-0'>
-                {/* Hello DB */}
-                <Leaderboard data={ldata} />
+
+                <CompeteLeader data={ldata} />
               </div>
 
             </div>

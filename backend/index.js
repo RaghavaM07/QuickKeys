@@ -108,7 +108,7 @@ io.on('connection', (socket) => {
 		}
 		else {
 			socket.join(roomId)
-			socket.emit({ room: theRoom, users: Object.keys(usersMap[roomId]) })
+			socket.emit('getRoom',{ room: theRoom, users: Object.keys(usersMap[roomId]) })
 			usersMap[roomId][username] = socket.id
 			socket.to(roomId).emit('new_member', { username, users: Object.keys(usersMap[roomId]) })
 		}

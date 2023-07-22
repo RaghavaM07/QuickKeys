@@ -26,14 +26,16 @@ export const Compete = () => {
   console.log(socket)
 
   useEffect(() => {
+    if(gameActive){
+      socket.emit("updateScore", {
+        roomId:RoomDetails.Roomid , 
+        newScore:data, 
+        username
+      });
+    }
     
-    socket.emit("updateScore", {
-      roomId:RoomDetails.Roomid , 
-      newScore:data, 
-      username
-    });
-    
-  }, [socket,data]);
+  }, [socket,data,gameActive]);
+
 
   useEffect(() => {
 
@@ -43,8 +45,23 @@ export const Compete = () => {
         username
       });
     }
+    socket.on("getRoom", (data) => {
+        console.log("getRoom",data.para)
+        if(!RoomDetails.creater){
+          const userPlaying = new Game(data.para, (new Date(data.endBy)-new Date(data.startBy)/1000), "MP")
+          setUserDetails(userPlaying);
+          setGameActive(true);
+          setSt(new Date(data.newRoom.startBy))
+          setWaiting(true);
+        }
+    });
+
+    socket.on("new_member", (data) => {
+      console.log("new_member",data)
+    });
+  
     socket.on("someones_score_update", (data) => {
-      console.log(data)
+      console.log("someones_score_update",data)
     });
   }, [socket]);
 
@@ -65,15 +82,13 @@ export const Compete = () => {
       }).then((response) => {
         setRoomDetails({ ...RoomDetails, Roomid: response.data.newRoom.roomId });
         const userPlaying = new Game(response.data.newRoom.para, Difficulty[difficulty].duration, "MP")
+        setUserDetails(userPlaying);
         socket.emit("join", {
           roomId:response.data.newRoom.roomId,
           username
         });
-        setUserDetails(userPlaying);
         setGameActive(true);
-        // setWaitTimer((new Date(response.data.newRoom.startBy-Date.now()))/1000)
         setSt(new Date(response.data.newRoom.startBy))
-        // setSt(new Date(Date.now()+5000))
         setWaiting(true);
       })
     }
@@ -90,7 +105,8 @@ export const Compete = () => {
   return (
     <>
       <div className="mx-auto grid  items-center gap-x-8 gap-y-16 px-4 py-5 sm:px-6 sm:py-7 lg:px-10 bg-white bg-opacity-80">
-        {!gameActive && (
+       
+        {!gameActive && RoomDetails.creater && (
 
           <div className='p-5 flex justify-around items-center border-2 rounded-t-lg bg-white'>
             <select
@@ -114,13 +130,23 @@ export const Compete = () => {
           </div>
         )}
 
-        {userDetails && gameActive && (
+        {userDetails && gameActive  && (
           <>
             <div className="grid grid-cols-5 p-0">
               <div className='col-span-4 p-0'>
                 {waiting ? (
+                  <>
+                   {RoomDetails.Roomid && (
+                     <div className="mt-2 flex items-center gap-x-3">
+                    <label htmlFor="photo" className="block text-xl font-medium leading-6 text-gray-900">
+                      RoomId
+                    </label>
+                    <p className="text-gray-500">{RoomDetails.Roomid}</p>
+                  </div>
+                  )}
                   
                   <CountdownTimer deadline={st} setFlag={setWaiting}/>
+                  </>
                 ) : (
                   <Typearea userDetails={userDetails} setGameActive={setGameActive} setGameEnded={setGameEnded} setData={setData} />
 
@@ -141,7 +167,7 @@ export const Compete = () => {
         {data && gameEnded && (
           <>
           <Result data={data} />
-          <Leaderboard data={ldata} />
+          <CompeteLeader data={ldata} />
           </>
         )}
       </div>

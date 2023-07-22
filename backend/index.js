@@ -100,7 +100,7 @@ io.on('connection', (socket) => {
 	socket.on('join', async (data) => {
 		const { roomId, username } = data
 
-		const theRoom = await Gameroom.find({ roomId })
+		const theRoom = await Gameroom.findOne({ roomId })
 
 		if (Date.now() >= theRoom.startBy) {
 			socket.emit('already_started', { roomId })

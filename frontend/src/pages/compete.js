@@ -19,7 +19,7 @@ export const Compete = () => {
   const [gameActive, setGameActive] = useState(false);
   const [userDetails, setUserDetails] = useState(null)
   const [data, setData] = useState(null);
-  const [ldata, setLData] = useState(null);
+  const [ldata, setLData] = useState([]);
   const [gameEnded, setGameEnded] = useState(false);
   const [waiting, setWaiting] = useState(false);
   const [st, setSt] = useState(null)
@@ -39,19 +39,19 @@ export const Compete = () => {
 
   useEffect(() => {
 
-    if(RoomDetails.Roomid){
+    if(!RoomDetails.creater){
       socket.emit("join", {
         roomId:RoomDetails.Roomid ,
         username
       });
     }
     socket.on("getRoom", (data) => {
-        console.log("getRoom",data.para)
+        console.log("getRoom",data)
         if(!RoomDetails.creater){
-          const userPlaying = new Game(data.para, (new Date(data.endBy)-new Date(data.startBy)/1000), "MP")
+          const userPlaying = new Game(data.room.para, (new Date(data.room.endBy)-new Date(data.room.startBy)/1000), "MP")
           setUserDetails(userPlaying);
           setGameActive(true);
-          setSt(new Date(data.newRoom.startBy))
+          setSt(new Date(data.room.startBy))
           setWaiting(true);
         }
     });
@@ -130,7 +130,7 @@ export const Compete = () => {
           </div>
         )}
 
-        {userDetails && gameActive  && (
+        {userDetails && gameActive && (
           <>
             <div className="grid grid-cols-5 p-0">
               <div className='col-span-4 p-0'>

@@ -116,6 +116,6 @@ io.on('connection', (socket) => {
 
 	socket.on('updateScore', data => {
 		const { roomId, newScore, username } = data
-		socket.to(roomId).emit('someones_score_update', { resultId: newScore, username })
+		socket.to(roomId).emit('someones_score_update', {  newScore, username })
 	})
 })

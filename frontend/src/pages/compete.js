@@ -23,6 +23,7 @@ export const Compete = () => {
   const [gameEnded, setGameEnded] = useState(false);
   const [waiting, setWaiting] = useState(false);
   const [st, setSt] = useState(null)
+  // const [playersData, setPlayersData] = useState({})
   console.log(socket)
 
   useEffect(() => {
@@ -48,8 +49,10 @@ export const Compete = () => {
     socket.on("getRoom", (data) => {
         console.log("getRoom",data)
         if(!RoomDetails.creater){
+
           const userPlaying = new Game(data.room.para, (new Date(data.room.endBy)-new Date(data.room.startBy)/1000), "MP")
           setUserDetails(userPlaying);
+          setLData(data.users)
           setGameActive(true);
           setSt(new Date(data.room.startBy))
           setWaiting(true);
@@ -57,7 +60,8 @@ export const Compete = () => {
     });
 
     socket.on("new_member", (data) => {
-      console.log("new_member",data)
+      console.log(data.users)
+      setLData(data.users)
     });
   
     socket.on("someones_score_update", (data) => {
@@ -67,12 +71,7 @@ export const Compete = () => {
 
 
 
-  useEffect(() => {
-    axios.get("http://localhost:5001/api/leaderboard").then((response) => {
-      console.log(response.data)
-      setLData(response.data);
-    });
-  }, []);
+ 
 
   const startTimer = async () => {
     try {
@@ -155,7 +154,7 @@ export const Compete = () => {
               </div>
               <div className='p-0'>
 
-                <CompeteLeader data={ldata} />
+                {/* <CompeteLeader data={ldata} /> */}
               </div>
 
             </div>

@@ -39,7 +39,7 @@ app.post('/api/newRoom', async (req, res) => {
 	const newRoom = await Gameroom.create({
 		creator: username,
 		roomId,
-		endBy: Date.now() + runTime[difficulty],
+		endBy: Date.now() + runTime[difficulty] + 60*1000,
 		para
 	})
 
@@ -108,14 +108,24 @@ io.on('connection', (socket) => {
 		}
 		else {
 			socket.join(roomId)
-			socket.emit('getRoom',{ room: theRoom, users: Object.keys(usersMap[roomId]) })
+			
+			const list = []
+			list.push({username, accuracy:0, speed:0})
+			const u = Object.keys(usersMap[roomId])
+			u.map(name => list.push({username: name, accuracy: 0, speed: 0}))
+			
+			
+			socket.emit('getRoom',{ room: theRoom, list })
+			
 			usersMap[roomId][username] = socket.id
-			socket.to(roomId).emit('new_member', { username, users: Object.keys(usersMap[roomId]) })
+			socket.to(roomId).emit('new_member', { username, list })
+			console.log("lafoot: ", usersMap[roomId]);
 		}
 	})
 
 	socket.on('updateScore', data => {
 		const { roomId, newScore, username } = data
+		console.log("newscore",newScore)
 		socket.to(roomId).emit('someones_score_update', {  newScore, username })
 	})
 })

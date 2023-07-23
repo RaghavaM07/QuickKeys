@@ -24,14 +24,36 @@ export const Compete = () => {
   const [waiting, setWaiting] = useState(false);
   const [st, setSt] = useState(null)
   // const [playersData, setPlayersData] = useState({})
-  console.log(socket)
 
   useEffect(() => {
-    if(gameActive){
+    if(gameActive && !waiting){
       socket.emit("updateScore", {
         roomId:RoomDetails.Roomid , 
-        newScore:data, 
+        newScore:{
+          username,
+          accuracy:data?.accuracy,
+          speed:data?.speed,
+        }, 
         username
+      });
+
+      const updateFieldChanged = (uData) => {
+        let newData = ldata.map((item) => {
+          if (item.username === uData.username) {
+            return { ...item, accuracy: uData.accuracy ,speed: uData.speed  };
+          } else {
+            return item;
+          }
+        });
+        console.log(newData)
+        setLData(newData);
+      };
+
+      socket.on("someones_score_update", (data) => {
+        if(data){
+          console.log("someones_score_update",data)
+          updateFieldChanged(data.newScore);
+        }
       });
     }
     
@@ -48,25 +70,22 @@ export const Compete = () => {
     }
     socket.on("getRoom", (data) => {
         console.log("getRoom",data)
+        setLData(data.list)
         if(!RoomDetails.creater){
-
-          const userPlaying = new Game(data.room.para, (new Date(data.room.endBy)-new Date(data.room.startBy)/1000), "MP")
+          const userPlaying = new Game(data.room.para, (new Date(data.room.endBy)-new Date(data.room.startBy))/1000, "MP")
           setUserDetails(userPlaying);
-          setLData(data.users)
-          setGameActive(true);
+          setGameActive(true)
           setSt(new Date(data.room.startBy))
           setWaiting(true);
         }
     });
 
     socket.on("new_member", (data) => {
-      console.log(data.users)
-      setLData(data.users)
+      console.log("new_member",data.list)
+      setLData(data.list)
     });
   
-    socket.on("someones_score_update", (data) => {
-      console.log("someones_score_update",data)
-    });
+    
   }, [socket]);
 
 
@@ -86,8 +105,8 @@ export const Compete = () => {
           roomId:response.data.newRoom.roomId,
           username
         });
-        setGameActive(true);
         setSt(new Date(response.data.newRoom.startBy))
+        setGameActive(true)
         setWaiting(true);
       })
     }
@@ -144,7 +163,7 @@ export const Compete = () => {
                   </div>
                   )}
                   
-                  <CountdownTimer deadline={st} setFlag={setWaiting}/>
+                  <CountdownTimer deadline={st} setFlag={setWaiting} setGameActive={setGameActive}/>
                   </>
                 ) : (
                   <Typearea userDetails={userDetails} setGameActive={setGameActive} setGameEnded={setGameEnded} setData={setData} />
@@ -154,7 +173,7 @@ export const Compete = () => {
               </div>
               <div className='p-0'>
 
-                {/* <CompeteLeader data={ldata} /> */}
+                <CompeteLeader data={ldata} />
               </div>
 
             </div>

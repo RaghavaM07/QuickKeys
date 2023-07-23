@@ -14,7 +14,6 @@ const usePress = (key, cb) => {
   useEffect(() => {
     function handle(event) {
       let isCorrect
-      console.log(event.key)
       if (event.key === key) {
         isCorrect = true
       }
@@ -38,7 +37,6 @@ const useUp = (key, cb) => {
   useEffect(() => {
     function handle(event) {
       let isCorrect
-      console.log(event.key)
       if (event.key === key) {
         isCorrect = true
       }
@@ -95,8 +93,8 @@ export const Typearea = ({ userDetails, setGameActive,setGameEnded, setData }) =
       speed,
       accuracy
     })
-    setGameEnded(true)
     setGameActive(false)
+    setGameEnded(true)
 
   }
 
@@ -141,7 +139,6 @@ export const Typearea = ({ userDetails, setGameActive,setGameEnded, setData }) =
     }
   }
   const handleDown = (event, isCorrect) => {
-    console.log(event.key, isCorrect)
     if (isCorrect && index > 0) {
       givenText.current.children[index - 1].className = 'normal text-2xl'
       setIndex(index - 1)
@@ -176,13 +173,13 @@ export const Typearea = ({ userDetails, setGameActive,setGameEnded, setData }) =
                 <label htmlFor="photo" className="block text-xl font-medium leading-6 text-gray-900">
                   Speed
                 </label>
-                <p className="text-gray-500">{speed?.toFixed(2)} wpm</p>
+                <p className="text-gray-500">{speed} wpm</p>
               </div>
               <div className="mt-2 flex items-center gap-x-3">
                 <label htmlFor="photo" className="block text-xl font-medium leading-6 text-gray-900">
                   Accuracy
                 </label>
-                <p className="text-gray-500">{accuracy?.toFixed(2)*100}%</p>
+                <p className="text-gray-500">{accuracy}%</p>
               </div>
 
               <div className="mt-2 flex items-center gap-x-3">

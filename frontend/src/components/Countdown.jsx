@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
-const CountdownTimer = ({ deadline, setFlag }) => {
+const CountdownTimer = ({ deadline, setFlag ,setGameActive}) => {
     const calculateTimeRemaining = () => {
         const now = new Date().getTime();
         const targetTime = deadline.getTime();
@@ -24,7 +24,8 @@ const CountdownTimer = ({ deadline, setFlag }) => {
 
             if (remaining.minutes === 0 && remaining.seconds === 0) {
                 clearInterval(timer);
-                setFlag(false); // Set the flag state to true after the countdown finishes
+                setFlag(false);
+                setGameActive(true);
             }
         }, 1000);
 

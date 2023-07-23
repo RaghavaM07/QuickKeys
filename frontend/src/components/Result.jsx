@@ -26,9 +26,9 @@ export const Result = ({data}) => {
                     </div>
                     <div className="hidden sm:flex sm:flex-col sm:items-end">
                         <p className="m-2 text-xl leading-6 font-medium text-black">Time Taken : {data.time}</p>
-                        <p className="m-2 text-xl leading-6 text-gray-900">Speed : {data.speed?.toFixed(2)} WPM</p>
+                        <p className="m-2 text-xl leading-6 text-gray-900">Speed : {data.speed} WPM</p>
                         <div className="m-2 flex items-center gap-x-1.5">
-                            <p className="text-m leading-5 text-gray-500">Accuracy : {data.accuracy?.toFixed(2) *100}%</p>
+                            <p className="text-m leading-5 text-gray-500">Accuracy : {data.accuracy}%</p>
                         </div>
                     </div>
                 </div>

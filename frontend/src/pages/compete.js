@@ -41,11 +41,14 @@ export const Compete = () => {
         let newData = ldata.map((item) => {
           if (item.username === uData.username) {
             return { ...item, accuracy: uData.accuracy ,speed: uData.speed  };
-          } else {
+          } else if(item.username === data.username) {
+            return { ...item, accuracy: data.accuracy ,speed: data.speed  };
+          }
+          else {
             return item;
           }
         });
-        console.log(newData)
+        newData.sort((a, b) => b.accuracy - a.accuracy)
         setLData(newData);
       };
 
@@ -184,7 +187,7 @@ export const Compete = () => {
 
         {data && gameEnded && (
           <>
-          <Result data={data} />
+          {/* <Result data={data} /> */}
           <CompeteLeader data={ldata} />
           </>
         )}

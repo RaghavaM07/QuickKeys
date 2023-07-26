@@ -81,7 +81,7 @@ export const Typearea = ({ userDetails, setGameActive,setGameEnded, setData }) =
   const teatArray = Array.from(userDetails.textToType.replaceAll(" ", "˽"));
   const [index, setIndex] = useState(0);
   const [inCorrects, setInCorrects] = useState(0);
-  const [accuracy, setAccuracy] = useState(null);
+  const [accuracy, setAccuracy] = useState(100);
   const [speed, setSpeed] = useState(null);
   const [currentTime, setCurrentTime] = useState(null);
 

@@ -5,8 +5,8 @@ export class Game {
         this.gameType = gameType;
     }
     static getAccuracy(typedlength,inCorrects){
-        if(typedlength===0) return 0;
-        return (((typedlength-inCorrects)/typedlength).toFixed(2))*100;
+        if(typedlength===0) return 100;
+        return (typedlength/(typedlength+inCorrects).toFixed(2))*100;
     }
     static getSpeed(typedlength,inCorrects,currentTime){
         // const lettersPerMin = (typedlength+inCorrects)/currentTime;
@@ -16,7 +16,7 @@ export class Game {
             const totalIncorrectCharacters = incorrectCharacters;
             const wordsTyped = (totalCharactersTyped + totalIncorrectCharacters) / 5;
             const typingSpeedWPM = wordsTyped / timeTakenInMinutes;
-            return typingSpeedWPM.toFixed(2);
+            return typingSpeedWPM.toFixed();
           }
           return calculateTypingSpeed(typedlength,inCorrects,currentTime/60)
     }

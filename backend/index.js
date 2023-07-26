@@ -110,9 +110,9 @@ io.on('connection', (socket) => {
 			socket.join(roomId)
 			
 			const list = []
-			list.push({username, accuracy:0, speed:0})
+			list.push({username, accuracy:100, speed:0})
 			const u = Object.keys(usersMap[roomId])
-			u.map(name => list.push({username: name, accuracy: 0, speed: 0}))
+			u.map(name => list.push({username: name, accuracy: 100, speed: 0}))
 			
 			
 			socket.emit('getRoom',{ room: theRoom, list })
